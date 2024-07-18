@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/black_700"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:weightSum="2"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:src="@drawable/splash_screen_acitivty">
+            </ImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:text="Easily Accessible">
+            </TextView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="32dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:text="@string/text_principal_splash_screen">
+                </TextView>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/getStarted"
+                android:layout_width="320dp"
+                android:layout_height="54dp"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/yellow"
+                android:textColor="@color/black"
+                android:text="Get Started">
+            </Button>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
