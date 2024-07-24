@@ -1,21 +1,29 @@
 package com.rodrigotriboni.budget.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rodrigotriboni.budget.R;
-import com.rodrigotriboni.budget.models.CreditCard;
+import com.rodrigotriboni.budget.models.ModelCreditCard;
+import com.rodrigotriboni.budget.ui.bank.AddCardFragment;
 
 import java.util.List;
 
-public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.CreditCardViewHolder> {
+public class CreditCardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<CreditCard> creditCardList;
+    private static final int VIEW_TYPE_CARD = 0;
+    private static final int VIEW_TYPE_ADD_CARD = 1;
+    private FragmentActivity activity;
+    private List<ModelCreditCard> modelCreditCardList;
 
     public static class CreditCardViewHolder extends RecyclerView.ViewHolder {
         public TextView tvCardNumber, tvCardHolderName, tvExpiryDate;
@@ -28,28 +36,67 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Cr
         }
     }
 
-    public CreditCardAdapter(List<CreditCard> creditCardList) {
-        this.creditCardList = creditCardList;
+    public static class AddCardViewHolder extends RecyclerView.ViewHolder {
+        public CardView cvCreditCard;
+
+        public AddCardViewHolder(View itemView) {
+            super(itemView);
+            cvCreditCard = itemView.findViewById(R.id.cvCreditCard);
+        }
+    }
+
+    public CreditCardAdapter(FragmentActivity activity, List<ModelCreditCard> modelCreditCardList) {
+        this.activity = activity;
+        this.modelCreditCardList = modelCreditCardList;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == modelCreditCardList.size()) {
+            return VIEW_TYPE_ADD_CARD;
+        }
+        return VIEW_TYPE_CARD;
     }
 
     @NonNull
     @Override
-    public CreditCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_credit_card, parent, false);
-        return new CreditCardViewHolder(itemView);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ADD_CARD) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.row_add_credit_card, parent, false);
+            return new AddCardViewHolder(itemView);
+        } else {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.row_credit_card, parent, false);
+            return new CreditCardViewHolder(itemView);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CreditCardViewHolder holder, int position) {
-        CreditCard creditCard = creditCardList.get(position);
-        holder.tvCardNumber.setText(creditCard.getCardNumber());
-        holder.tvCardHolderName.setText(creditCard.getCardHolderName());
-        holder.tvExpiryDate.setText(creditCard.getExpiryDate());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof CreditCardViewHolder) {
+            ModelCreditCard modelCreditCard = modelCreditCardList.get(position);
+            ((CreditCardViewHolder) holder).tvCardNumber.setText(modelCreditCard.getCardNumber());
+            ((CreditCardViewHolder) holder).tvCardHolderName.setText(modelCreditCard.getCardHolderName());
+            ((CreditCardViewHolder) holder).tvExpiryDate.setText(modelCreditCard.getExpiryDate());
+        } else if (holder instanceof AddCardViewHolder) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Handle "Add Card" view click
+                    Log.d("CreditCardAdapter", "Add Card clicked");
+                    FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.nav_host_fragment_activity_main, new AddCardFragment())
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return creditCardList.size();
+        return modelCreditCardList.size() + 1;
     }
 }

@@ -9,14 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.rodrigotriboni.budget.R;
+import com.google.ai.client.generativeai.GenerativeModel;
+import com.google.ai.client.generativeai.java.GenerativeModelFutures;
+import com.google.ai.client.generativeai.type.Content;
+import com.google.ai.client.generativeai.type.GenerateContentResponse;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.rodrigotriboni.budget.adapters.CreditCardAdapter;
 import com.rodrigotriboni.budget.databinding.FragmentHomeBinding;
-import com.rodrigotriboni.budget.models.CreditCard;
+import com.rodrigotriboni.budget.models.ModelCreditCard;
 
 import java.util.List;
 
@@ -35,14 +40,13 @@ public class HomeFragment extends Fragment {
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-        // Configure o ViewPager2 e o CircleIndicator
         final ViewPager2 viewPager = binding.viewPager;
         final CircleIndicator3 circleIndicator = binding.circleIndicator;
 
-        homeViewModel.getCreditCardList().observe(getViewLifecycleOwner(), new Observer<List<CreditCard>>() {
+        homeViewModel.getCreditCardList().observe(getViewLifecycleOwner(), new Observer<List<ModelCreditCard>>() {
             @Override
-            public void onChanged(List<CreditCard> creditCards) {
-                CreditCardAdapter adapter = new CreditCardAdapter(creditCards);
+            public void onChanged(List<ModelCreditCard> modelCreditCards) {
+                CreditCardAdapter adapter = new CreditCardAdapter(getActivity(), modelCreditCards);
                 viewPager.setAdapter(adapter);
                 circleIndicator.setViewPager(viewPager);
             }

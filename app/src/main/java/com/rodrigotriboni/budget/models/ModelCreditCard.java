@@ -1,12 +1,12 @@
 package com.rodrigotriboni.budget.models;
 
-public class CreditCard {
+public class ModelCreditCard {
 
     private String cardNumber;
     private String cardHolderName;
     private String expiryDate;
 
-    public CreditCard(String cardNumber, String cardHolderName, String expiryDate) {
+    public ModelCreditCard(String cardNumber, String cardHolderName, String expiryDate) {
         this.cardNumber = cardNumber;
         this.cardHolderName = cardHolderName;
         this.expiryDate = expiryDate;

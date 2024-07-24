@@ -158,7 +158,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:src="@drawable/ic_baseline_arrow_circle_up_24px"
-                            app:tint="@color/green">
+                            app:tint="@color/colorGreen">
                         </ImageView>
                     </LinearLayout>
 
@@ -176,6 +176,7 @@
                             android:textSize="16sp"
                             android:textColor="@color/white" />
                         <TextView
+                            android:id="@+id/tv_income_amount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="$3,0000,00"
@@ -220,7 +221,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:src="@drawable/ic_baseline_arrow_circle_down_24px"
-                            app:tint="@color/red">
+                            app:tint="@color/colorRed">
                         </ImageView>
                     </LinearLayout>
 
@@ -237,6 +238,7 @@
                             android:textSize="16sp"
                             android:textColor="@color/white" />
                         <TextView
+                            android:id="@+id/tv_expenses_amount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="$3,0000,00"

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "913337584455",
+    "project_id": "budget-e2e54",
+    "storage_bucket": "budget-e2e54.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913337584455:android:f9d15499892b6bc3645a62",
+        "android_client_info": {
+          "package_name": "com.rodrigotriboni.budget"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByjIF_cA1ugLpj7MT5ktJWHRju4LyT1p0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

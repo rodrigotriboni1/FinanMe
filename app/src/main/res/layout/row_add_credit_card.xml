@@ -10,6 +10,10 @@
         android:layout_margin="8dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="8dp"
+        android:id="@+id/cvCreditCard"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
         android:backgroundTint="@color/black_500">
 
         <LinearLayout
