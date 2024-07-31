@@ -22,18 +22,8 @@
         tools:targetApi="tiramisu" >
         <activity android:name=".activity.StyledNavigationActivity" />
         <activity
-            android:name=".activity.PreLoginActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true"
-            android:theme="@style/Theme.Budget.Fullscreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activity.LoginActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="true"
             android:theme="@style/Theme.Budget.Fullscreen">
             <intent-filter>
