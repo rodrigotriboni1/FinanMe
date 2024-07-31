@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editText_amount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter Amount"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"/>
+
+    <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:entries="@array/budget_categories"
+        app:layout_constraintTop_toBottomOf="@id/editText_amount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"/>
+
+    <Button
+        android:id="@+id/button_add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Item"
+        app:layout_constraintTop_toBottomOf="@id/spinner_category"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"/>
+
+    <!--  Add a RecyclerView for displaying budget items here  -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_budget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/button_add_item"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

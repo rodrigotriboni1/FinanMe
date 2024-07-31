@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.rodrigotriboni.budget.R;
 import com.rodrigotriboni.budget.models.ModelCreditCard;
-import com.rodrigotriboni.budget.ui.bank.AddCardFragment;
 
 import java.util.List;
 
@@ -85,11 +84,6 @@ public class CreditCardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public void onClick(View v) {
                     // Handle "Add Card" view click
                     Log.d("CreditCardAdapter", "Add Card clicked");
-                    FragmentManager fragmentManager = activity.getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.nav_host_fragment_activity_main, new AddCardFragment())
-                            .addToBackStack(null)
-                            .commit();
                 }
             });
         }

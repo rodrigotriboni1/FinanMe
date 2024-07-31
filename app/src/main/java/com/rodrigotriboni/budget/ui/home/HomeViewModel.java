@@ -24,7 +24,7 @@ public class HomeViewModel extends ViewModel {
 
     private void loadCreditCards() {
         List<ModelCreditCard> cards = new ArrayList<>();
-        cards.add(new ModelCreditCard("**** **** **** 1234", "Rodrigo M Triboni", "12/23"));
+//        cards.add(new ModelCreditCard("**** **** **** 1234", "Rodrigo M Triboni", "12/23"));
 //        cards.add(new CreditCard("**** **** **** 5678", "Rodrigo M Triboni", "11/24"));
 //        cards.add(new CreditCard("**** **** **** 5678", "Rodrigo M Triboni", "11/24"));
         creditCardList.setValue(cards);

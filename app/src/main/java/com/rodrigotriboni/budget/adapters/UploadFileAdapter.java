@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,10 +13,10 @@ import com.rodrigotriboni.budget.R;
 
 import java.util.List;
 
-public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder> {
+public class UploadFileAdapter extends RecyclerView.Adapter<UploadFileAdapter.FileViewHolder> {
 
     private List<Uri> fileList;
-    public FileAdapter(List<Uri> fileList) {
+    public UploadFileAdapter(List<Uri> fileList) {
         this.fileList = fileList;
     }
 

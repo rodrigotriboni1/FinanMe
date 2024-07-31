@@ -2,26 +2,25 @@
     <!-- Base application theme. -->
     <style name="Theme.Budget" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/black_500</item>
-        <item name="colorPrimaryVariant">@color/black_700</item>
-        <item name="colorOnPrimary">@color/black_500</item>
+        <item name="colorPrimary">@color/light_blue_A400</item>
+        <item name="colorPrimaryVariant">@color/yellow</item>
+        <item name="colorOnPrimary">@color/light_blue_A400</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/grey</item>
+        <item name="colorSecondaryVariant">@color/grey_700</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
 
     <style name="Theme.Budget.Fullscreen" parent="Theme.Budget">
         <item name="android:actionBarStyle">@style/Widget.Theme.Budget.ActionBar.Fullscreen</item>
-        <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@null</item>
     </style>
 
     <style name="ThemeOverlay.Budget.FullscreenContainer" parent="">
-        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
-        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+        <item name="fullscreenBackgroundColor">@color/grey_700</item>
+        <item name="fullscreenTextColor">@color/white</item>
     </style>
 </resources>

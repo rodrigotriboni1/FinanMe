@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.auth)
     implementation(libs.core.ktx)
+    implementation(libs.play.services.nearby)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -82,6 +83,8 @@ dependencies {
     implementation ("com.itextpdf:itextg:5.5.10")
 
     implementation ("androidx.security:security-crypto:1.1.0-alpha05")
+
+    implementation ("com.google.code.gson:gson:2.8.8")
 
 
 }

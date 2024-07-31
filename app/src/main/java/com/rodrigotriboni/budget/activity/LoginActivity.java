@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.rodrigotriboni.budget.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -36,22 +38,34 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         signupRedirectText = findViewById(R.id.signupRedirectText);
 
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            // User is signed in, proceed to MainActivity
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+            return;
+        }
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = loginEmail.getText().toString();
                 String pass = loginPassword.getText().toString();
-
-                if(!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     if (!pass.isEmpty()) {
                         auth.signInWithEmailAndPassword(email, pass)
                                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                     @Override
                                     public void onSuccess(AuthResult authResult) {
-                                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(LoginActivity.this, MainActivity.class ));
-                                        finish();
+                                        // Save login details to SharedPreferences
+                                        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = prefs.edit();
+                                        editor.putString("email", email);
+                                        editor.apply();
 
+                                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                        finish();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -70,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
         signupRedirectText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
