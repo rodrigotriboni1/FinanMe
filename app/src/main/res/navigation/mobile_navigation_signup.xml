@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation_signup"
+    app:startDestination="@id/sign_up_fragment_1">
+
+    <fragment
+        android:id="@+id/sign_up_fragment_1"
+        android:name="com.rodrigotriboni.budget.ui.signup.SignUpFragment1"
+        android:label="@layout/fragment_signup_1"/>
+
+    <fragment
+        android:id="@+id/sign_up_fragment_2"
+        android:name="com.rodrigotriboni.budget.ui.signup.SignUpFragment2"
+        android:label="@layout/fragment_signup_2"/>
+    <fragment
+        android:id="@+id/sign_up_fragment_3"
+        android:name="com.rodrigotriboni.budget.ui.signup.SignUpFragment3"
+        android:label="@layout/fragment_signup_3"/>
+</navigation>

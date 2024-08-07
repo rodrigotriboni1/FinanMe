@@ -108,7 +108,7 @@ public class GeminiFlash {
 
                         if (existingDataSnapshot.exists()) {
                             for (DataSnapshot categorySnapshot : existingDataSnapshot.getChildren()) {
-                                String category = categorySnapshot.getKey();
+                                String category = sanitizeKey(categorySnapshot.getKey());
                                 Map<String, Map<String, Object>> existingCategoryData = (Map<String, Map<String, Object>>) categorySnapshot.getValue();
                                 categorizedData.put(category, existingCategoryData != null ? existingCategoryData : new HashMap<>());
                             }
@@ -117,7 +117,7 @@ public class GeminiFlash {
                         for (int j = 0; j < jsonArray.length(); j++) {
                             try {
                                 JSONObject transactionObject = jsonArray.getJSONObject(j);
-                                String category = transactionObject.optString("category", "Unknown");
+                                String category = sanitizeKey(transactionObject.optString("category", "Unknown"));
 
                                 double amount = transactionObject.optDouble("amount");
                                 if (Double.isNaN(amount) || Double.isInfinite(amount)) {
@@ -160,6 +160,10 @@ public class GeminiFlash {
         data.put("amount", jsonObject.optDouble("amount"));
         data.put("bank", jsonObject.optString("bank"));
         return data;
+    }
+
+    private String sanitizeKey(String key) {
+        return key.replaceAll("[./#$\\[\\]]", "_");
     }
 
 }

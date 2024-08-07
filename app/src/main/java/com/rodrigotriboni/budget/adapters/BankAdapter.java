@@ -1,25 +1,35 @@
 package com.rodrigotriboni.budget.adapters;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.rodrigotriboni.budget.R;
-import com.rodrigotriboni.budget.helpers.NumberFormatter;
+import com.rodrigotriboni.budget.activity.DetailsActivity;
 import com.rodrigotriboni.budget.models.ModelBank;
+import com.rodrigotriboni.budget.helpers.NumberFormatter;
 
 import java.util.List;
 
 public class BankAdapter extends RecyclerView.Adapter<BankAdapter.BankViewHolder> {
 
     private final List<ModelBank> modelBankList;
+    private final Context context;
 
-    public BankAdapter(List<ModelBank> modelBankList) {
+    public BankAdapter(Context context, List<ModelBank> modelBankList) {
         this.modelBankList = modelBankList;
+        this.context = context;
     }
 
     @NonNull
@@ -33,6 +43,29 @@ public class BankAdapter extends RecyclerView.Adapter<BankAdapter.BankViewHolder
     public void onBindViewHolder(@NonNull BankViewHolder holder, int position) {
         ModelBank modelBank = modelBankList.get(position);
         holder.bind(modelBank);
+        holder.cvBankAccount.setOnClickListener(view -> {
+            Intent intent = new Intent(context, DetailsActivity.class);
+            intent.putExtra("bankName", modelBank.getName());
+            context.startActivity(intent);
+        });
+        holder.cvBankAccount.setOnLongClickListener(view -> {
+            new AlertDialog.Builder(context)
+                    .setTitle("Excluir")
+                    .setMessage("Deseja realmente excluir este item?")
+                    .setPositiveButton("Sim", (dialog, which) -> {
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("expenses").child(modelBank.getName());
+                        databaseReference.removeValue((error, ref) -> {
+                            if (error == null) {
+                                modelBankList.remove(position);
+                                notifyItemRemoved(position);
+                                notifyItemRangeChanged(position, modelBankList.size());
+                            }
+                        });
+                    })
+                    .setNegativeButton("Não", null)
+                    .show();
+            return true;
+        });
     }
 
     @Override
@@ -48,19 +81,25 @@ public class BankAdapter extends RecyclerView.Adapter<BankAdapter.BankViewHolder
 
     static class BankViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView bankNameTextView;
-        private final TextView totalAmountTextView;
+        private final TextView tvBankName;
+        private final TextView tvTotalAmountExpenses;
+        private final TextView tvTotalAmountIncome;
+        private final CardView cvBankAccount;
 
         public BankViewHolder(@NonNull View itemView) {
             super(itemView);
-            bankNameTextView = itemView.findViewById(R.id.tvBankName);
-            totalAmountTextView = itemView.findViewById(R.id.tvAmount);
+            tvBankName = itemView.findViewById(R.id.tvBankName);
+            tvTotalAmountIncome = itemView.findViewById(R.id.tvAmountIncome);
+            tvTotalAmountExpenses = itemView.findViewById(R.id.tvAmountExpenses);
+            cvBankAccount = itemView.findViewById(R.id.cvBankAccount);
         }
 
         public void bind(ModelBank modelBank) {
-            bankNameTextView.setText(modelBank.getName());
-            String formattedAmount = NumberFormatter.format(modelBank.getTotalAmount());
-            totalAmountTextView.setText(formattedAmount);
+            tvBankName.setText(modelBank.getName());
+            String formattedAmount = NumberFormatter.formatCurrency(modelBank.getTotalAmountIncome());
+            String formattedExpenses = NumberFormatter.formatCurrency(modelBank.getTotalAmountExpenses());
+            tvTotalAmountIncome.setText(formattedAmount);
+            tvTotalAmountExpenses.setText(formattedExpenses);
         }
     }
 }

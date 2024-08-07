@@ -1,14 +1,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/colorBlue"/> <!-- Cor de fundo -->
+            <solid android:color="@color/grey_light"/> <!-- Cor de fundo -->
         </shape>
     </item>
 
     <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <solid android:color="#FF5722"/> <!-- Cor do progresso -->
+                <solid android:color="@color/light_purple_dark"/> <!-- Cor do progresso -->
             </shape>
         </clip>
     </item>

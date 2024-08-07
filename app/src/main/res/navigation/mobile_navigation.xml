@@ -20,4 +20,5 @@
         android:id="@+id/navigation_settings"
         android:name="com.rodrigotriboni.budget.ui.settings.SettingsFragment"
         tools:layout="@layout/fragment_settings" />
+
 </navigation>

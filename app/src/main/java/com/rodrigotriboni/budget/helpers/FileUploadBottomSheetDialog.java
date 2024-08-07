@@ -12,12 +12,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.itextpdf.text.pdf.PdfReader;
@@ -25,7 +24,7 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.rodrigotriboni.budget.R;
 import com.rodrigotriboni.budget.adapters.FileAdapter;
 import com.rodrigotriboni.budget.pojos.ResponseCallback;
-import com.rodrigotriboni.budget.ui.publish.PublishViewModel;
+import com.rodrigotriboni.budget.ui.publish.PublishFragment;
 import com.rodrigotriboni.budget.analyzer.GeminiFlash;
 
 import java.io.IOException;
@@ -36,14 +35,14 @@ import java.util.UUID;
 
 public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
 
-    private PublishViewModel publishViewModel;
-    private FileAdapter selectedFileAdapter;
+    private final PublishFragment publishFragment;
+
     private static final int PICK_FILE_REQUEST = 1;
     private GeminiFlash geminiFlash;
     private Context context;
 
-    public FileUploadBottomSheetDialog(PublishViewModel viewModel) {
-        this.publishViewModel = viewModel;
+    public FileUploadBottomSheetDialog(PublishFragment fragment) {
+        this.publishFragment = fragment;
         this.geminiFlash = new GeminiFlash();
     }
 
@@ -56,6 +55,7 @@ public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        FileAdapter selectedFileAdapter;
         View view = inflater.inflate(R.layout.bottom_sheet_upload, container, false);
 
         RecyclerView rvSelectedFiles = view.findViewById(R.id.rvFileListSelected);
@@ -63,7 +63,7 @@ public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
         selectedFileAdapter = new FileAdapter(new ArrayList<>());
         rvSelectedFiles.setAdapter(selectedFileAdapter);
 
-        publishViewModel.getSelectedFiles().observe(getViewLifecycleOwner(), selectedFiles -> {
+        publishFragment.getSelectedFiles().observe(getViewLifecycleOwner(), selectedFiles -> {
             selectedFileAdapter.updateFileList(selectedFiles);
             Log.d("FileUploadBottomSheet", "Selected files updated: " + selectedFiles.size() + " files.");
         });
@@ -77,13 +77,13 @@ public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
 
         view.findViewById(R.id.btnUploadFile).setOnClickListener(v -> {
             Log.d("FileUploadBottomSheet", "Upload file button clicked.");
-            List<Uri> selectedFiles = publishViewModel.getSelectedFiles().getValue();
+            List<Uri> selectedFiles = publishFragment.getSelectedFiles().getValue();
             if (selectedFiles != null && !selectedFiles.isEmpty()) {
                 for (Uri uri : selectedFiles) {
                     Log.d("FileUploadBottomSheet", "Uploading file: " + uri.toString());
                     uploadFileToFirebase(uri);
                 }
-                publishViewModel.clearSelectedFiles();
+                publishFragment.clearSelectedFiles();
             } else {
                 Log.d("FileUploadBottomSheet", "No files selected for upload.");
             }
@@ -99,7 +99,7 @@ public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
             Uri fileUri = data.getData();
             if (fileUri != null) {
                 Log.d("FileUploadBottomSheet", "File selected: " + fileUri.toString());
-                publishViewModel.addSelectedFile(fileUri);
+                publishFragment.addSelectedFile(fileUri);
             } else {
                 Log.d("FileUploadBottomSheet", "File selection failed.");
             }
@@ -117,7 +117,7 @@ public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
                             .addOnSuccessListener(downloadUrl -> {
                                 Log.d("FirebaseStorage", "Download URL: " + downloadUrl.toString());
                                 extractTextFromPdf(fileUri, fileRef);
-                                publishViewModel.addFile(fileUri);
+                                publishFragment.addFile(fileUri);
                             })
                             .addOnFailureListener(e -> Log.e("FirebaseStorage", "Failed to get download URL", e));
                 })

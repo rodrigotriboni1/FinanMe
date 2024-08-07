@@ -6,17 +6,18 @@ public class ModelExpense {
     private String category;
     private double amount;
     private String bank;
+    private String key;
 
-    // No-argument constructor required for Firebase
     public ModelExpense() {
     }
 
-    public ModelExpense(String date, String item, String category, double amount, String bank) {
+    public ModelExpense(String date, String item, String category, double amount, String bank, String key) {
         this.date = date;
         this.item = item;
         this.category = category;
         this.amount = amount;
         this.bank = bank;
+        this.key = key;
     }
 
     // Getters and setters
@@ -58,5 +59,13 @@ public class ModelExpense {
 
     public void setBank(String bank) {
         this.bank = bank;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

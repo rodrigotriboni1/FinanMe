@@ -178,7 +178,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="2">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -313,13 +314,13 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:id="@+id/tvMoreTransactions"
+                    android:id="@+id/tvMoreTalkGemini"
                     android:padding="8dp"
                     android:background="@color/white">
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_baseline_sync_alt_24px"
+                        android:src="@drawable/ic_baseline_chat_24px"
                         app:tint="@color/black"
                         android:padding="10dp"
                         android:backgroundTint="@color/light_blue_A200"

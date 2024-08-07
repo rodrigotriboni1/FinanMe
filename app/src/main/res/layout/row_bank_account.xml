@@ -7,9 +7,13 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_margin="8dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="8dp"
+        android:id="@+id/cvBankAccount"
         android:backgroundTint="@color/white">
 
         <LinearLayout
@@ -22,17 +26,12 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_marginStart="20dp">
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/ic_google_icon">
-                    </ImageView>
 
                     <TextView
                         android:id="@+id/tvBankName"
@@ -44,6 +43,7 @@
                         android:layout_marginStart="8dp"
                         android:text="Google">
                     </TextView>
+
                 </LinearLayout>
                 <View
                     android:layout_width="wrap_content"
@@ -65,15 +65,46 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:orientation="vertical">
                         <TextView
-                            android:id="@+id/tvAmount"
+                            android:id="@+id/tvAmountIncome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/robotoregular"
-                            android:textSize="32sp"
-                            android:textColor="@color/black"
+                            android:textSize="24sp"
+                            android:textColor="@color/greenVariant"
                             android:text="5,470,00">
+                        </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/robotoregular"
+                            android:textSize="14sp"
+                            android:textColor="@color/black"
+                            android:text="Incomes">
+                        </TextView>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/tvAmountExpenses"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/robotoregular"
+                            android:textSize="24sp"
+                            android:textColor="@color/redVariant"
+                            android:text="5,470,00">
+                        </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/robotoregular"
+                            android:textSize="14sp"
+                            android:textColor="@color/black"
+                            android:text="Expenses">
                         </TextView>
                     </LinearLayout>
                     <LinearLayout

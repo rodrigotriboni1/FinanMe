@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -27,7 +25,6 @@ import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderF
 import com.rodrigotriboni.budget.R;
 import com.rodrigotriboni.budget.databinding.ActivityMainBinding;
 import com.rodrigotriboni.budget.helpers.SharedViewModel;
-import com.rodrigotriboni.budget.ui.home.HomeFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,8 +34,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
-    private Spinner monthSpinner;
-    private Calendar calendar = Calendar.getInstance();
+    private final Calendar calendar = Calendar.getInstance();
     private SharedViewModel sharedViewModel;
 
     @Override
@@ -47,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(getSupportActionBar()).hide();
 
-        // Initialize Firebase and AppCheck
         FirebaseApp.initializeApp(this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
@@ -66,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        monthSpinner = findViewById(R.id.month_spinner);
+        Spinner monthSpinner = findViewById(R.id.month_spinner);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.months_array, android.R.layout.simple_spinner_item);
@@ -75,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
         updateCurrentMonthText();
 
 
-
-        // Initialize SharedViewModel
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -95,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                // TODO document why this method is empty
             }
         });
     }
@@ -111,10 +105,8 @@ public class MainActivity extends AppCompatActivity {
     // Handle Toolbar Menu Item Clicks
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        item.getItemId();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

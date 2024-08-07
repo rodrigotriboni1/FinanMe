@@ -3,11 +3,14 @@ package com.rodrigotriboni.budget.models;
 public class ModelBank {
 
     private String name;
-    private int totalAmount;
+    private int totalAmountIncome, totalAmountExpenses;
 
-    public ModelBank(String name, int totalAmount) {
+
+
+    public ModelBank(String name, int totalAmountIncome, int totalAmountExpenses) {
         this.name = name;
-        this.totalAmount = totalAmount;
+        this.totalAmountIncome = totalAmountIncome;
+        this.totalAmountExpenses = totalAmountExpenses;
     }
 
     public String getName() {
@@ -18,11 +21,19 @@ public class ModelBank {
         this.name = name;
     }
 
-    public int getTotalAmount() {
-        return totalAmount;
+    public int getTotalAmountIncome() {
+        return totalAmountIncome;
     }
 
-    public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setTotalAmountIncome(int totalAmountIncome) {
+        this.totalAmountIncome = totalAmountIncome;
+    }
+
+    public int getTotalAmountExpenses() {
+        return totalAmountExpenses;
+    }
+
+    public void setTotalAmountExpenses(int totalAmountExpenses) {
+        this.totalAmountExpenses = totalAmountExpenses;
     }
 }

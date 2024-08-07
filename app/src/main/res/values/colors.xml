@@ -18,10 +18,14 @@
     <color name="colorBlue">#2196F3</color>
     <color name="grey_light">#F7FAFA</color>"
     <color name="grey_700">#B3B8B6B6</color>
+    <color name="light_purple_dark">#B180F6</color>\
+    <color name="light_purple_600">#5D60E9</color>
+    <color name="light_purple_900">#A289F1</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF1A59CD</color>
     <color name="light_blue_A200">#FF40C4FF</color>
     <color name="light_blue_A400">#0259CD</color>
     <color name="black_overlay">#66000000</color>
+    <color name="transparent">#00FFFFFF</color>
 
 </resources>

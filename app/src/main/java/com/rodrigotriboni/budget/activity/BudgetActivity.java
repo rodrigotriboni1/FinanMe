@@ -1,5 +1,6 @@
 package com.rodrigotriboni.budget.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,15 +26,14 @@ import java.util.Objects;
 
 public class BudgetActivity extends AppCompatActivity {
 
-    private EditText editTextAmount;
-    private Spinner spinnerCategory;
-    private Button buttonAddItem;
-    private RecyclerView recyclerViewBudget;
+
     private BudgetItemAdapter adapter;
     private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EditText editTextAmount;
+        Spinner spinnerCategory;
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -41,8 +41,8 @@ public class BudgetActivity extends AppCompatActivity {
 
         editTextAmount = findViewById(R.id.editText_amount);
         spinnerCategory = findViewById(R.id.spinner_category);
-        buttonAddItem = findViewById(R.id.button_add_item);
-        recyclerViewBudget = findViewById(R.id.recyclerView_budget);
+        Button buttonAddItem = findViewById(R.id.button_add_item);
+        RecyclerView recyclerViewBudget = findViewById(R.id.recyclerView_budget);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("budget_items");
 
@@ -73,7 +73,7 @@ public class BudgetActivity extends AppCompatActivity {
     private void loadDataFromFirebase() {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<ModelBudget> modelBudgets = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ModelBudget item = snapshot.getValue(ModelBudget.class);
@@ -83,7 +83,7 @@ public class BudgetActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(BudgetActivity.this, "Failed to load data", Toast.LENGTH_SHORT).show();
             }
         });

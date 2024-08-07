@@ -18,7 +18,7 @@
         android:foreground="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:backgroundTint="@color/black_500">
+        android:backgroundTint="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_baseline_publish_24px"
-                app:tint="@color/white"
+                app:tint="@color/black"
                 android:layout_gravity="center_vertical"/>
 
             <TextView
@@ -39,12 +39,20 @@
                 android:layout_marginStart="8dp"
                 android:text="Upload Transactions"
                 android:textSize="24sp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:fontFamily="@font/robotoregular"
                 android:layout_gravity="center_vertical"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <ProgressBar
+        android:id="@+id/sendPromptProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,11 +60,6 @@
         android:orientation="vertical"
         android:weightSum="2">
         <!-- RecyclerView for File List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFileList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvBankList"
@@ -65,7 +68,5 @@
             android:layout_weight="1.5" />
 
     </LinearLayout>
-
-
 
 </LinearLayout>

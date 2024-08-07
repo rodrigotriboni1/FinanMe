@@ -44,6 +44,14 @@
             android:name=".activity.BudgetActivity"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".activity.DetailsActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".activity.TalkGeminiActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.Observer;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,10 +17,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rodrigotriboni.budget.R;
-import com.rodrigotriboni.budget.Utils.NumberFormatter;
 import com.rodrigotriboni.budget.activity.BudgetActivity;
+import com.rodrigotriboni.budget.activity.TalkGeminiActivity;
 import com.rodrigotriboni.budget.databinding.FragmentHomeBinding;
+import com.rodrigotriboni.budget.helpers.NumberFormatter;
 import com.rodrigotriboni.budget.helpers.SharedViewModel;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,29 +44,26 @@ public class HomeFragment extends Fragment {
 
         // Get the SharedViewModel instance
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        sharedViewModel.getSelectedMonth().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer monthPosition) {
-                selectedCalendar.set(Calendar.MONTH, monthPosition);
-                fetchAndDisplayIncome();
-                fetchAndDisplayExpenses();
-            }
+        sharedViewModel.getSelectedMonth().observe(getViewLifecycleOwner(), monthPosition -> {
+            selectedCalendar.set(Calendar.MONTH, monthPosition);
+            fetchAndDisplayIncome();
+            fetchAndDisplayExpenses();
         });
 
+        LinearLayout tvMoreTalkGemini = root.findViewById(R.id.tvMoreTalkGemini);
+        setupClickListener(tvMoreTalkGemini, TalkGeminiActivity.class);
+
         LinearLayout tvMoreBudget = root.findViewById(R.id.tvMoreBudget);
-        setupClickListener(tvMoreBudget, new BudgetActivity());
+        setupClickListener(tvMoreBudget, BudgetActivity.class);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         return root;
     }
 
-    private void setupClickListener(View view, final BudgetActivity activityClass) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), activityClass.getClass());
-                startActivity(intent);
-            }
+    private void setupClickListener(View view, final Class<?> activityClass) {
+        view.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), activityClass);
+            startActivity(intent);
         });
     }
 
@@ -84,7 +82,7 @@ public class HomeFragment extends Fragment {
                     for (DataSnapshot categorySnapshot : bankSnapshot.getChildren()) {
                         for (DataSnapshot dateSnapshot : categorySnapshot.getChildren()) {
                             String date = dateSnapshot.getKey();
-
+                            
                             if (date.substring(3).equals(selectedMonth)) {
                                 for (DataSnapshot expenseSnapshot : dateSnapshot.getChildren()) {
                                     Double amount = expenseSnapshot.child("amount").getValue(Double.class);

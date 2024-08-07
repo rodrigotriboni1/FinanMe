@@ -1,5 +1,6 @@
 package com.rodrigotriboni.budget.ui.dashboard;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,10 +39,10 @@ public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private ExpenseAdapter expenseAdapter;
-    private DashboardViewModel dashboardViewModel;
     private SharedViewModel sharedViewModel;
+    private List<ModelExpense> expenseList;
 
-    private final Calendar selectedCalendar = Calendar.getInstance();
+    private Calendar selectedCalendar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -49,16 +50,20 @@ public class DashboardFragment extends Fragment {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
-        RecyclerView rvTransactionList = root.findViewById(R.id.rvTransactionList);
+        DashboardViewModel dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+        RecyclerView rvTransactionList = binding.rvTransactionList;
         rvTransactionList.setLayoutManager(new LinearLayoutManager(getContext()));
-        expenseAdapter = new ExpenseAdapter(new ArrayList<>());
+
+        expenseList = new ArrayList<>();
+        expenseAdapter = new ExpenseAdapter(getContext(), expenseList);
         rvTransactionList.setAdapter(expenseAdapter);
 
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        sharedViewModel.getSelectedMonth().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer monthPosition) {
+        selectedCalendar = Calendar.getInstance();
+
+        sharedViewModel.getSelectedMonth().observe(getViewLifecycleOwner(), monthPosition -> {
+            if (monthPosition != null) {
                 selectedCalendar.set(Calendar.MONTH, monthPosition);
                 loadExpensesFromFirebase();
             }
@@ -77,35 +82,33 @@ public class DashboardFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.MONTH, selectedMonth);
 
-                // Iterate through all banks under "expenses"
                 for (DataSnapshot bankSnapshot : snapshot.getChildren()) {
                     String bank = bankSnapshot.getKey();
 
-                    // Iterate through all categories for the bank
                     for (DataSnapshot categorySnapshot : bankSnapshot.getChildren()) {
-                        // Iterate through all dates for the category
                         for (DataSnapshot dateSnapshot : categorySnapshot.getChildren()) {
                             String dateString = dateSnapshot.getKey();
-                            // Parse date string to get the month
                             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                             Date date;
                             try {
                                 date = sdf.parse(dateString);
                             } catch (ParseException e) {
                                 Log.e("loadExpensesFromFirebase", "Error parsing date", e);
-                                continue; // Skip this expense if parsing fails
+                                continue;
                             }
                             Calendar expenseDate = Calendar.getInstance();
                             expenseDate.setTime(date);
 
-                            // Check if the expense date matches the selected month
                             if (expenseDate.get(Calendar.MONTH) == selectedMonth) {
-                                // Iterate through all expense entries for the date
                                 for (DataSnapshot expenseSnapshot : dateSnapshot.getChildren()) {
                                     try {
                                         Map<String, Object> expenseMap = (Map<String, Object>) expenseSnapshot.getValue();
                                         if (expenseMap != null) {
-                                            ModelExpense expense = mapToModelExpense(expenseMap);
+                                            String key = expenseSnapshot.getKey();
+                                            String item = (String) expenseMap.getOrDefault("item", "");
+                                            String category = (String) expenseMap.getOrDefault("category", "");
+                                            double amount = expenseMap.get("amount") instanceof Number ? ((Number) Objects.requireNonNull(expenseMap.get("amount"))).doubleValue() : 0.0;
+                                            ModelExpense expense = new ModelExpense(dateString, item, category, amount, bank, key);
                                             expensesList.add(expense);
                                         }
                                     } catch (Exception e) {
@@ -125,16 +128,6 @@ public class DashboardFragment extends Fragment {
             }
         });
     }
-
-    private ModelExpense mapToModelExpense(Map<String, Object> expenseMap) {
-        String date = (String) expenseMap.getOrDefault("date", "");
-        String item = (String) expenseMap.getOrDefault("item", "");
-        String category = (String) expenseMap.getOrDefault("category", "");
-        double amount = expenseMap.get("amount") instanceof Number ? ((Number) Objects.requireNonNull(expenseMap.get("amount"))).doubleValue() : 0.0;
-        String bank = (String) expenseMap.getOrDefault("bank", "");
-        return new ModelExpense(date, item, category, amount, bank);
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();

@@ -16,7 +16,7 @@ public class StyledNavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.black,getTheme()));
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
         }
     }
