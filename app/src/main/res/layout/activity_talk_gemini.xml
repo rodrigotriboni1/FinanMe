@@ -21,9 +21,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="Chat w/ Gemini"
+                android:text="Chat w/ Gemini about your finances"
                 android:textAlignment="center"
-                android:textSize="34sp" />
+                android:textSize="24sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -45,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="32dp"
+                android:textColor="@color/white"
                 android:text="Send query" />
 
             <ProgressBar

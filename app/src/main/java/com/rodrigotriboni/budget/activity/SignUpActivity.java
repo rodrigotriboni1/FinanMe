@@ -2,6 +2,7 @@ package com.rodrigotriboni.budget.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -44,6 +45,10 @@ public class SignUpActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this::updateProgressBasedOnBackStack);
     }
+    public void setContinueButtonVisibility(int visibility) {
+        ExtendedFloatingActionButton fabContinue = findViewById(R.id.extended_fab);
+        fabContinue.setVisibility(visibility);
+    }
 
     private void navigateToNextFragment() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
@@ -62,6 +67,7 @@ public class SignUpActivity extends AppCompatActivity {
             updateProgress(progressMap[4]);
         } else if (currentFragment instanceof SignUpFragment5) {
             showSignupFragment6();
+            setContinueButtonVisibility(View.GONE);
             updateProgress(progressMap[5]);
         } else if (currentFragment instanceof SignUpFragment6) {
             updateProgress(progressMap[6]);
@@ -147,5 +153,10 @@ public class SignUpActivity extends AppCompatActivity {
         if (backStackEntryCount >= 0 && backStackEntryCount < progressMap.length) {
             updateProgress(progressMap[backStackEntryCount]);
         }
+    }
+
+    public void setContinueButtonEnabled(boolean enabled) {
+        ExtendedFloatingActionButton fabContinue = findViewById(R.id.extended_fab);
+        fabContinue.setEnabled(enabled);
     }
 }

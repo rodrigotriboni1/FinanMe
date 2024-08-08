@@ -47,7 +47,7 @@
             android:id="@+id/signup_name"
             android:layout_marginTop="40dp"
             android:padding="8dp"
-            android:hint="Email"
+            android:hint="Name"
             android:drawableLeft="@drawable/ic_baseline_person_24px"
             android:drawablePadding="8dp"
             android:textColor="@color/black" />

@@ -2,63 +2,90 @@ package com.rodrigotriboni.budget.ui.signup;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.rodrigotriboni.budget.R;
-import com.rodrigotriboni.budget.activity.LoginActivity;
+import com.rodrigotriboni.budget.activity.MainActivity;
+import com.rodrigotriboni.budget.models.ModelUserSignUpData;
 
-import java.util.Objects;
+import java.util.List;
 
 public class SignUpFragment6 extends Fragment {
 
-    private FirebaseAuth auth;
-    private EditText signupEmail;
-    private EditText signupPassword;
+    private SignUpViewModel viewModel;
+    private DatabaseReference databaseReference;
+    private FirebaseAuth mAuth;
+    private EditText signup_email;
+    private EditText signup_password;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_signup_6, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_signup_6, container, false);
 
-        auth = FirebaseAuth.getInstance();
-        signupPassword = root.findViewById(R.id.signup_password);
-        Button signupButton = root.findViewById(R.id.signup_button);
-        TextView loginRedirectText = root.findViewById(R.id.loginRedirectText);
+        viewModel = new ViewModelProvider(requireActivity()).get(SignUpViewModel.class);
+        signup_email = view.findViewById(R.id.signup_email);
+        signup_password = view.findViewById(R.id.signup_password);
+        Button signup_button = view.findViewById(R.id.signup_button);
 
-        signupButton.setOnClickListener(view -> {
-            String user = signupEmail.getText().toString().trim();
-            String pass = signupPassword.getText().toString().trim();
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
-            if (user.isEmpty()) {
-                signupEmail.setError("Email cannot be empty");
-            } else if (pass.isEmpty()) {
-                signupPassword.setError("Password cannot be empty");
-            } else {
-                auth.createUserWithEmailAndPassword(user, pass)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getActivity(), "Signup Successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getActivity(), LoginActivity.class));
-                            } else {
-                                Toast.makeText(getActivity(), "Signup Failed: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+        signup_button.setOnClickListener(v -> {
+            String email = signup_email.getText().toString().trim();
+            String password = signup_password.getText().toString().trim();
+
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+                Toast.makeText(getContext(), "Please enter email and password", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                String name = viewModel.getSignupName().getValue();
+                                List<String> responses = viewModel.getSelectedResponses();
+                                saveUserData(user.getUid(), email, name, responses);
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
-        loginRedirectText.setOnClickListener(view -> startActivity(new Intent(getActivity(), LoginActivity.class)));
+        return view;
+    }
 
-        return root;
+    private void saveUserData(String userId, String email, String name, List<String> responses) {
+        ModelUserSignUpData modelUserSignUpData = new ModelUserSignUpData(email, responses, name);
+
+        databaseReference.child(userId).setValue(modelUserSignUpData)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(), "User data saved.", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getActivity(), MainActivity.class));
+                        getActivity().finish();
+                    } else {
+                        Toast.makeText(getContext(), "Failed to save user data.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

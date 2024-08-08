@@ -43,6 +43,7 @@ public class SignUpQuestionAdapter extends RecyclerView.Adapter<SignUpQuestionAd
         holder.iconImageView.setImageDrawable(question.getIcon());
 
         Integer selectedPosition = viewModel.getSelectedPosition(key).getValue();
+
         if (selectedPosition != null && selectedPosition == position) {
             holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.light_purple_dark));
         } else {
@@ -50,10 +51,9 @@ public class SignUpQuestionAdapter extends RecyclerView.Adapter<SignUpQuestionAd
         }
 
         holder.itemView.setOnClickListener(v -> {
-            int previousPosition = selectedPosition != null ? selectedPosition : RecyclerView.NO_POSITION;
-            if (previousPosition != position) {
-                viewModel.setSelectedPosition(key, position);
-            }
+            viewModel.setSelectedPosition(key, position);
+
+            viewModel.addResponse(questions.get(position).getQuestionText());
         });
     }
 

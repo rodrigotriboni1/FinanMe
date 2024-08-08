@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +25,6 @@ import com.rodrigotriboni.budget.databinding.FragmentHomeBinding;
 import com.rodrigotriboni.budget.helpers.NumberFormatter;
 import com.rodrigotriboni.budget.helpers.SharedViewModel;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -32,9 +33,10 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
-    private DatabaseReference expensesRef, incomeRef;
+    private DatabaseReference expensesRef, incomeRef, usersRef;
     private final Calendar selectedCalendar = Calendar.getInstance();
     private SharedViewModel sharedViewModel;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -42,7 +44,6 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // Get the SharedViewModel instance
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         sharedViewModel.getSelectedMonth().observe(getViewLifecycleOwner(), monthPosition -> {
             selectedCalendar.set(Calendar.MONTH, monthPosition);
@@ -50,13 +51,20 @@ public class HomeFragment extends Fragment {
             fetchAndDisplayExpenses();
         });
 
+
+
         LinearLayout tvMoreTalkGemini = root.findViewById(R.id.tvMoreTalkGemini);
         setupClickListener(tvMoreTalkGemini, TalkGeminiActivity.class);
 
         LinearLayout tvMoreBudget = root.findViewById(R.id.tvMoreBudget);
         setupClickListener(tvMoreBudget, BudgetActivity.class);
 
+        binding.tvUsername.setVisibility(View.GONE);
+
+
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        firebaseAuth = FirebaseAuth.getInstance();
+        fetchAndDisplayUserName();
         return root;
     }
 
@@ -82,7 +90,7 @@ public class HomeFragment extends Fragment {
                     for (DataSnapshot categorySnapshot : bankSnapshot.getChildren()) {
                         for (DataSnapshot dateSnapshot : categorySnapshot.getChildren()) {
                             String date = dateSnapshot.getKey();
-                            
+
                             if (date.substring(3).equals(selectedMonth)) {
                                 for (DataSnapshot expenseSnapshot : dateSnapshot.getChildren()) {
                                     Double amount = expenseSnapshot.child("amount").getValue(Double.class);
@@ -104,7 +112,6 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle possible errors
             }
         });
     }
@@ -147,6 +154,29 @@ public class HomeFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle possible errors
+            }
+        });
+    }
+
+    private void fetchAndDisplayUserName() {
+        String userId = firebaseAuth.getCurrentUser().getUid();
+        usersRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String userName = dataSnapshot.child("name").getValue(String.class);
+                    if (binding != null) {
+                        binding.tvUsername.setVisibility(View.VISIBLE);
+                        TextView tvUsername = binding.getRoot().findViewById(R.id.tvUsername);
+                        tvUsername.setText(String.format("Hi, %s", userName));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
