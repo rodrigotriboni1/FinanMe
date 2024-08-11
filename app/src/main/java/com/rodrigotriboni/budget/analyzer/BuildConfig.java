@@ -1,5 +1,7 @@
 package com.rodrigotriboni.budget.analyzer;
 
+import static com.rodrigotriboni.budget.BuildConfig.geminiApiKey;
+
 public class BuildConfig {
-    public static String apiKey = "AIzaSyDLJn689D47C1mFzfVzYW8eBquDxLtPfHc";
+    public final static String apiKey = geminiApiKey;
 }
