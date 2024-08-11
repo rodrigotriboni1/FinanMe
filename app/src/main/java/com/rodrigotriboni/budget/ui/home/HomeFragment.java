@@ -70,7 +70,13 @@ public class HomeFragment extends Fragment {
 
     private void setupClickListener(View view, final Class<?> activityClass) {
         view.setOnClickListener(v -> {
+            int selectedMonth = sharedViewModel.getSelectedMonth().getValue() != null ?
+                    sharedViewModel.getSelectedMonth().getValue() : 0;
+
             Intent intent = new Intent(getActivity(), activityClass);
+
+            intent.putExtra("SELECTED_MONTH", selectedMonth);
+
             startActivity(intent);
         });
     }

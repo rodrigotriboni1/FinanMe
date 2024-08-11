@@ -1,14 +1,12 @@
 package com.rodrigotriboni.budget.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +23,7 @@ import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderF
 import com.rodrigotriboni.budget.R;
 import com.rodrigotriboni.budget.databinding.ActivityMainBinding;
 import com.rodrigotriboni.budget.helpers.SharedViewModel;
+import com.rodrigotriboni.budget.helpers.SpinnerUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,10 +47,8 @@ public class MainActivity extends AppCompatActivity {
         firebaseAppCheck.installAppCheckProviderFactory(
                 PlayIntegrityAppCheckProviderFactory.getInstance());
 
-        com.rodrigotriboni.budget.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         appBarConfiguration = new AppBarConfiguration.Builder(
@@ -62,47 +59,17 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         Spinner monthSpinner = findViewById(R.id.month_spinner);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.months_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        monthSpinner.setAdapter(adapter);
-        updateCurrentMonthText();
+        SpinnerUtil.setupMonthSpinner(monthSpinner, this, this);
 
 
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-
-        monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                calendar.set(Calendar.MONTH, position);
-                updateCurrentMonthText();
-
-                // Update SharedViewModel
-                sharedViewModel.setSelectedMonth(position);
-                if (view instanceof TextView) {
-                    ((TextView) view).setTextColor(getResources().getColor(R.color.white, getTheme()));
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // TODO document why this method is empty
-            }
-        });
     }
-
-    private void updateCurrentMonthText() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
-        String currentMonth = sdf.format(calendar.getTime());}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return false;
     }
 
-    // Handle Toolbar Menu Item Clicks
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         item.getItemId();
