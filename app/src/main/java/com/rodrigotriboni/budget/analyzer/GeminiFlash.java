@@ -2,8 +2,6 @@ package com.rodrigotriboni.budget.analyzer;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
 import com.google.ai.client.generativeai.type.BlockThreshold;
@@ -15,7 +13,6 @@ import com.google.ai.client.generativeai.type.SafetySetting;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,7 +29,7 @@ import java.util.concurrent.Executor;
 
 public class GeminiFlash {
     private GenerativeModelFutures getModel() {
-        String apiKey = BuildConfig.apiKey;
+        String apiKey = BuildConfigApi.apiKey;
 
         SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
                 BlockThreshold.ONLY_HIGH);

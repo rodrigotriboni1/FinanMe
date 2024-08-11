@@ -18,7 +18,7 @@ import com.rodrigotriboni.budget.pojos.ResponseCallback;
 import java.util.Collections;
 import java.util.concurrent.Executor;
 
-public class GeminiProChat {
+public class GeminiFlashChat {
     public void getResponse(String query, ResponseCallback callback) {
         GenerativeModelFutures model = getModel();
 
@@ -45,7 +45,7 @@ public class GeminiProChat {
 
     }
     private GenerativeModelFutures getModel() {
-        String apiKey = BuildConfig.apiKey;
+        String apiKey = BuildConfigApi.apiKey;
 
         SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
                 BlockThreshold.ONLY_HIGH);

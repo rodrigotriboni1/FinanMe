@@ -10,24 +10,22 @@ android {
     compileSdk = 34
 
     defaultConfig {
+        buildConfigField("String", "geminiApiKey", "\"${System.getProperty("geminiApiKey")}\"")
+
         applicationId = "com.rodrigotriboni.budget"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "geminiApiKey", "\"${project.findProperty("GEMINI_API_KEY")}\"")
     }
     buildTypes {
         buildTypes {
-            release {
-                isMinifyEnabled = false
-                buildConfigField("String", "geminiApiKey", "\"${project.findProperty("GEMINI_API_KEY")}\"")
-            }
             debug {
-                buildConfigField("String", "geminiApiKey", "\"${project.findProperty("GEMINI_API_KEY")}\"")
+                buildConfigField("String", "geminiApiKey", "\"${System.getProperty("geminiApiKey")}\"")
             }
+            release {
+                buildConfigField("String", "geminiApiKey", "\"${System.getProperty("geminiApiKey")}\"") }
         }
     }
     compileOptions {

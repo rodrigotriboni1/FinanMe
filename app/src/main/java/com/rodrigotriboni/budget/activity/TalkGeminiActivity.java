@@ -26,7 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rodrigotriboni.budget.R;
-import com.rodrigotriboni.budget.analyzer.GeminiProChat;
+import com.rodrigotriboni.budget.analyzer.GeminiFlashChat;
 import com.rodrigotriboni.budget.helpers.SharedViewModel;
 import com.rodrigotriboni.budget.helpers.SpinnerUtil;
 import com.rodrigotriboni.budget.pojos.ResponseCallback;
@@ -35,10 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -94,7 +91,7 @@ public class TalkGeminiActivity extends AppCompatActivity {
         });
 
         sendQueryButton.setOnClickListener(v -> {
-            GeminiProChat model = new GeminiProChat();
+            GeminiFlashChat model = new GeminiFlashChat();
 
             String query = queryEditText.getText().toString();
             progressBar.setVisibility(View.VISIBLE);
