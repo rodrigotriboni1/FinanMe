@@ -1,6 +1,7 @@
 package com.rodrigotriboni.budget.helpers;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,10 +37,10 @@ import java.util.UUID;
 public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
 
     private final PublishFragment publishFragment;
-
     private static final int PICK_FILE_REQUEST = 1;
     private GeminiFlash geminiFlash;
     private Context context;
+    private ProgressDialog progressDialog;
 
     public FileUploadBottomSheetDialog(PublishFragment fragment) {
         this.publishFragment = fragment;
@@ -79,6 +80,11 @@ public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
             Log.d("FileUploadBottomSheet", "Upload file button clicked.");
             List<Uri> selectedFiles = publishFragment.getSelectedFiles().getValue();
             if (selectedFiles != null && !selectedFiles.isEmpty()) {
+                progressDialog = new ProgressDialog(context);
+                progressDialog.setMessage("Enviando...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
                 for (Uri uri : selectedFiles) {
                     Log.d("FileUploadBottomSheet", "Uploading file: " + uri.toString());
                     uploadFileToFirebase(uri);
@@ -112,20 +118,33 @@ public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
         StorageReference fileRef = storageRef.child("uploads/" + UUID.randomUUID().toString());
         fileRef.putFile(fileUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    Log.d("FirebaseStorage", "File uploaded successfully.");
+                    Log.d("Rodrigo", "File uploaded successfully.");
+                    progressDialog.setMessage("Processando...");
+
                     fileRef.getDownloadUrl()
                             .addOnSuccessListener(downloadUrl -> {
-                                Log.d("FirebaseStorage", "Download URL: " + downloadUrl.toString());
+                                Log.d("Rodrigo", "Download URL: " + downloadUrl.toString());
                                 extractTextFromPdf(fileUri, fileRef);
                                 publishFragment.addFile(fileUri);
                             })
-                            .addOnFailureListener(e -> Log.e("FirebaseStorage", "Failed to get download URL", e));
+                            .addOnFailureListener(e -> {
+                                Log.e("Rodrigo", "Failed to get download URL", e);
+                                if (progressDialog.isShowing()) {
+                                    progressDialog.dismiss();
+                                }
+                            });
                 })
-                .addOnFailureListener(e -> Log.e("FirebaseStorage", "Failed to upload file", e));
+                .addOnFailureListener(e -> {
+                    Log.e("Rodrigo", "Failed to upload file", e);
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     private void extractTextFromPdf(Uri fileUri, StorageReference fileRef) {
         Log.d("Rodrigo", "Starting text extraction from PDF.");
+
         try (InputStream inputStream = context.getContentResolver().openInputStream(fileUri)) {
             if (inputStream != null) {
                 PdfReader reader = new PdfReader(inputStream);
@@ -136,24 +155,39 @@ public class FileUploadBottomSheetDialog extends BottomSheetDialogFragment {
                 }
                 reader.close();
                 Log.d("Rodrigo", "Text extraction completed.");
+
                 geminiFlash.getResponse(extractedText.toString(), new ResponseCallback() {
                     @Override
                     public void onResponse(String response) {
                         Log.d("GeminiFlash", "Response: " + response);
                         deleteUploadedFile(fileRef);
+
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
                         Log.e("GeminiFlash", "Error: ", throwable);
                         deleteUploadedFile(fileRef);
+
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
                     }
                 });
             } else {
                 Log.e("Rodrigo", "Failed to open InputStream");
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
             }
         } catch (IOException e) {
             Log.e("Rodrigo", "Error extracting text from PDF", e);
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
         }
     }
 
