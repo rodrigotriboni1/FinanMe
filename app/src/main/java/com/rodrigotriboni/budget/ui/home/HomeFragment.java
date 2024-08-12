@@ -1,6 +1,8 @@
 package com.rodrigotriboni.budget.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +34,6 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    private HomeViewModel homeViewModel;
     private DatabaseReference expensesRef, incomeRef, usersRef;
     private final Calendar selectedCalendar = Calendar.getInstance();
     private SharedViewModel sharedViewModel;
@@ -51,8 +52,6 @@ public class HomeFragment extends Fragment {
             fetchAndDisplayExpenses();
         });
 
-
-
         LinearLayout tvMoreTalkGemini = root.findViewById(R.id.tvMoreTalkGemini);
         setupClickListener(tvMoreTalkGemini, TalkGeminiActivity.class);
 
@@ -61,8 +60,7 @@ public class HomeFragment extends Fragment {
 
         binding.tvUsername.setVisibility(View.GONE);
 
-
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         firebaseAuth = FirebaseAuth.getInstance();
         fetchAndDisplayUserName();
         return root;
@@ -165,26 +163,40 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchAndDisplayUserName() {
-        String userId = firebaseAuth.getCurrentUser().getUid();
-        usersRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String savedUserName = sharedPreferences.getString("user_name", null);
 
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String userName = dataSnapshot.child("name").getValue(String.class);
-                    if (binding != null) {
-                        binding.tvUsername.setVisibility(View.VISIBLE);
-                        TextView tvUsername = binding.getRoot().findViewById(R.id.tvUsername);
-                        tvUsername.setText(String.format("Hi, %s", userName));
+        if (savedUserName != null) {
+            binding.tvUsername.setVisibility(View.VISIBLE);
+            TextView tvUsername = binding.getRoot().findViewById(R.id.tvUsername);
+            tvUsername.setText(String.format("Hi, %s", savedUserName));
+        } else {
+            String userId = firebaseAuth.getCurrentUser().getUid();
+            usersRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String userName = dataSnapshot.child("name").getValue(String.class);
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("user_name", userName);
+                        editor.apply();
+
+                        if (binding != null) {
+                            binding.tvUsername.setVisibility(View.VISIBLE);
+                            TextView tvUsername = binding.getRoot().findViewById(R.id.tvUsername);
+                            tvUsername.setText(String.format("Hi, %s", userName));
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
     }
 
     @Override
