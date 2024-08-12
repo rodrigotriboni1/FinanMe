@@ -51,9 +51,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         holder.tvAmount.setText(NumberFormatter.formatCurrency(expense.getAmount()));
         holder.itemView.setOnLongClickListener(view -> {
             new AlertDialog.Builder(context)
-                    .setTitle("Excluir")
-                    .setMessage("Deseja realmente excluir este item?")
-                    .setPositiveButton("Sim", (dialog, which) -> {
+                    .setTitle("Delete")
+                    .setMessage("Do you really want to delete this item?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("expenses").child(expense.getBank()).child(expense.getKey());
                         databaseReference.removeValue((error, ref) -> {
                             if (error == null) {
@@ -63,7 +63,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
                             }
                         });
                     })
-                    .setNegativeButton("Não", null)
+                    .setNegativeButton("No", null)
                     .show();
             return true;
         });

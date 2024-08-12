@@ -50,19 +50,24 @@ public class BankAdapter extends RecyclerView.Adapter<BankAdapter.BankViewHolder
         });
         holder.cvBankAccount.setOnLongClickListener(view -> {
             new AlertDialog.Builder(context)
-                    .setTitle("Excluir")
-                    .setMessage("Deseja realmente excluir este item?")
-                    .setPositiveButton("Sim", (dialog, which) -> {
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("expenses").child(modelBank.getName());
-                        databaseReference.removeValue((error, ref) -> {
+                    .setTitle("Delete")
+                    .setMessage("Do you really want to delete this item?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        DatabaseReference expensesReference = FirebaseDatabase.getInstance().getReference("expenses").child(modelBank.getName());
+                        expensesReference.removeValue((error, ref) -> {
                             if (error == null) {
-                                modelBankList.remove(position);
-                                notifyItemRemoved(position);
-                                notifyItemRangeChanged(position, modelBankList.size());
+                                DatabaseReference incomesReference = FirebaseDatabase.getInstance().getReference("incomes").child(modelBank.getName());
+                                incomesReference.removeValue((incomeError, incomeRef) -> {
+                                    if (incomeError == null) {
+                                        modelBankList.remove(position);
+                                        notifyItemRemoved(position);
+                                        notifyItemRangeChanged(position, modelBankList.size());
+                                    }
+                                });
                             }
                         });
                     })
-                    .setNegativeButton("Não", null)
+                    .setNegativeButton("No", null)
                     .show();
             return true;
         });

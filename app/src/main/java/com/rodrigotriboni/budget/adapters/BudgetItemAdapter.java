@@ -26,7 +26,6 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
         this.budgetItems = budgetItems;
     }
 
-    // Update the items in the adapter
     public void updateItems(List<ModelBudget> newItems) {
         this.budgetItems = newItems;
         notifyDataSetChanged();
